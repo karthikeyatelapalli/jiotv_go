@@ -17,6 +17,7 @@ COPY main.go ./main.go
 RUN go build -ldflags="-s -w" -trimpath -o /app/jiotv_go .
 
 # Stage 2: Create the final minimal image
+# skipcq: DOK-DL3007
 FROM alpine:latest
 
 # Set the working directory inside the container
@@ -31,9 +32,12 @@ ENV JIOTV_PATH_PREFIX="/app/.jiotv_go"
 # Volume for credentials
 VOLUME /app/.jiotv_go
 
-# Expose port 5001 to the outside world
-EXPOSE 5001
+# Expose port 8000 to the outside world
+EXPOSE 8000
 
 # Command to run the executable with arguments
+# The CMD instruction has been replaced with ENTRYPOINT to allow arguments
 ENTRYPOINT ["./jiotv_go"]
-CMD ["serve", "--public"]
+
+# Default arguments
+CMD ["serve", "--public", "--port", "8000"]
