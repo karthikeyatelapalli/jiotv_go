@@ -1,3 +1,4 @@
+# Stage 1: Build the Go app
 FROM golang:1.22-alpine AS builder
 
 # Set the working directory inside the container
@@ -16,7 +17,6 @@ COPY main.go ./main.go
 RUN go build -ldflags="-s -w" -trimpath -o /app/jiotv_go .
 
 # Stage 2: Create the final minimal image
-# skipcq: DOK-DL3007
 FROM alpine:latest
 
 # Set the working directory inside the container
@@ -35,8 +35,5 @@ VOLUME /app/.jiotv_go
 EXPOSE 5001
 
 # Command to run the executable with arguments
-# The CMD instruction has been replaced with ENTRYPOINT to allow arguments
 ENTRYPOINT ["./jiotv_go"]
-
-# Default arguments
 CMD ["serve", "--public"]
